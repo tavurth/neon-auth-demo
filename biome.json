@@ -28,7 +28,20 @@
           "options": {
             "allow": ["error", "warn"]
           }
-        }
+        },
+        "noDebugger": "error",
+        "noAssignInExpressions": "error"
+      },
+      "security": {
+        "noDangerouslySetInnerHtml": "error"
+      },
+      "complexity": {
+        "noBannedTypes": "error"
+      },
+      "correctness": {
+        "noUnusedImports": "error",
+        "noUnusedVariables": "error",
+        "useExhaustiveDependencies": "warn"
       }
     }
   },
