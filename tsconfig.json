@@ -20,9 +20,11 @@
     ],
     "paths": {
       "@/*": ["./src/*"],
+      "@/types": ["./src/lib/shared/types.ts"],
       "@/backend/*": ["./src/lib/backend/*"],
       "@/frontend/*": ["./src/lib/frontend/*"],
-      "@/components/*": ["./src/lib/components/*"]
+      "@/components/*": ["./src/lib/components/*"],
+      "@/shared/*": ["./src/lib/shared/*"]
     }
   },
   "include": [
