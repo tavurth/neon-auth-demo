@@ -10,7 +10,8 @@
     "lint:fix": "biome check --write .",
     "format": "prettier --write .",
     "prepare": "husky",
-    "db:reset": "bunx dbmate drop && bunx dbmate up"
+    "db:reset": "bunx dbmate drop && bunx dbmate up",
+    "test": "./tests/test.sh"
   },
   "dependencies": {
     "@neondatabase/auth": "^0.4.2-beta",

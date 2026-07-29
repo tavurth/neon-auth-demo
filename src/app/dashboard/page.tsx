@@ -21,8 +21,8 @@ export default async function DashboardPage() {
 				</div>
 				<SignOutButton />
 			</div>
-			<NotesList userId={session.user.id} />
-			<div className="mt-8">
+			<div className="space-y-6">
+				<NotesList userId={session.user.id} />
 				<JwtInfo />
 			</div>
 		</div>

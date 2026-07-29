@@ -16,15 +16,21 @@ export function JwtInfo() {
 	return (
 		<Card>
 			<CardHeader>
-				<CardTitle>JWT / JWKS</CardTitle>
-				<p className="text-sm text-muted-foreground">
-					Use Bearer tokens for API access outside the browser cookie jar.
-				</p>
+				<CardTitle>JWT Token</CardTitle>
 			</CardHeader>
 			<CardContent>
 				<JwtButton onToken={setToken} />
-				{token && <JwtDisplay token={token} />}
-				<JwtHint />
+				{token && (
+					<pre className="mt-3 overflow-x-auto rounded bg-muted p-3 text-xs">
+						{token}
+					</pre>
+				)}
+				<p className="mt-3 text-xs text-muted-foreground">
+					<code>
+						curl -H "Authorization: Bearer &lt;token&gt;"
+						http://localhost:3000/api/notes
+					</code>
+				</p>
 			</CardContent>
 		</Card>
 	);
@@ -50,30 +56,8 @@ function JwtButton({ onToken }: { onToken: (token: string) => void }) {
 	}
 
 	return (
-		<Button
-			variant="secondary"
-			disabled={loading}
-			onClick={fetchToken}
-			className="mb-3"
-		>
+		<Button variant="secondary" disabled={loading} onClick={fetchToken}>
 			{loading ? "Loading..." : "Show my token"}
 		</Button>
-	);
-}
-
-function JwtDisplay({ token }: { token: string }) {
-	return (
-		<pre className="overflow-x-auto rounded bg-muted p-3 text-xs">{token}</pre>
-	);
-}
-
-function JwtHint() {
-	return (
-		<p className="mt-3 text-xs text-muted-foreground">
-			Test with:{" "}
-			<code>
-				curl -H &quot;Authorization: Bearer &lt;token&gt;&quot; /api/protected
-			</code>
-		</p>
 	);
 }
