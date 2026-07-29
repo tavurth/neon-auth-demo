@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
-import { verifyJwt } from "@/lib/auth/jwks";
-import { db } from "@/lib/db";
+import { verifyJwt } from "@/backend/auth/jwks";
+import { listNotes } from "@/backend/services/notes";
 
 export async function GET(req: NextRequest) {
   const authHeader = req.headers.get("authorization");
@@ -22,12 +22,6 @@ export async function GET(req: NextRequest) {
     return NextResponse.json({ error: "Token missing subject claim" }, { status: 401 });
   }
 
-  const notes = await db
-    .selectFrom("notes")
-    .where("user_id", "=", userId)
-    .selectAll()
-    .orderBy("created_at", "desc")
-    .execute();
-
+  const notes = await listNotes(userId);
   return NextResponse.json({ userId, notes });
 }

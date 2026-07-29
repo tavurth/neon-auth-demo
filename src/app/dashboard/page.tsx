@@ -1,4 +1,4 @@
-import { auth } from "@/lib/auth/server";
+import { auth } from "@/backend/auth/server";
 import { redirect } from "next/navigation";
 import { NotesList } from "./notes-list";
 import { SignOutButton } from "./sign-out-button";

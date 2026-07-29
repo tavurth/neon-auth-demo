@@ -1,4 +1,4 @@
-import { auth } from "@/lib/auth/server";
+import { auth } from "@/backend/auth/server";
 
 export default auth.middleware({ loginUrl: "/auth/sign-in" });
 
