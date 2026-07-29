@@ -1,10 +1,3 @@
-<!-- BEGIN:nextjs-agent-rules -->
-
-# This is NOT the Next.js you know
-
-This version has breaking changes — APIs, conventions, and file structure may all differ from your training data. Read the relevant guide in `node_modules/next/dist/docs/` before writing any code. Heed deprecation notices.
-<!-- END:nextjs-agent-rules -->
-
 # Project Conventions
 
 ## File Structure
@@ -87,5 +80,4 @@ Use only the tokens defined in the `@theme` block in `globals.css`. Do not use a
 
 ## Testing
 
-- Run `bun run lint` before committing
 - Run `bun run build` to verify type safety
