@@ -41,38 +41,40 @@ export function NotesList({ userId }: { userId: string }) {
 					value={draft.title}
 					onChange={(e) => setDraftTitle(e.target.value)}
 					placeholder="New note..."
-					className="flex-1 rounded-md border border-zinc-300 px-3 py-2 text-sm dark:border-zinc-600 dark:bg-zinc-800"
+					className="flex-1 rounded-md border border-border bg-background px-3 py-2 text-sm"
 				/>
 				<button
 					type="submit"
 					disabled={!draft.title.trim() || create.isPending}
-					className="rounded-md bg-blue-600 px-4 py-2 text-sm font-medium text-white hover:bg-blue-700 disabled:opacity-50"
+					className="rounded-md bg-primary px-4 py-2 text-sm font-medium text-primary-foreground hover:bg-primary/90 disabled:opacity-50"
 				>
 					Add
 				</button>
 			</form>
 
 			{isLoading ? (
-				<p className="text-sm text-zinc-500">Loading...</p>
+				<p className="text-sm text-muted-foreground">Loading...</p>
 			) : notes.length === 0 ? (
-				<p className="text-sm text-zinc-500">No notes yet. Create one above.</p>
+				<p className="text-sm text-muted-foreground">
+					No notes yet. Create one above.
+				</p>
 			) : (
 				<ul className="space-y-2">
 					{notes.map((note) => (
 						<li
 							key={note.id}
-							className="flex items-center justify-between rounded-md border border-zinc-200 px-4 py-3 dark:border-zinc-700"
+							className="flex items-center justify-between rounded-md border border-border px-4 py-3"
 						>
 							<div>
 								<p className="font-medium">{note.title}</p>
-								<p className="text-xs text-zinc-500">
+								<p className="text-xs text-muted-foreground">
 									{new Date(note.created_at).toLocaleDateString()}
 								</p>
 							</div>
 							<button
 								type="button"
 								onClick={() => remove.mutate(note.id)}
-								className="text-sm text-red-500 hover:text-red-700"
+								className="text-sm text-destructive hover:text-destructive/80"
 							>
 								Delete
 							</button>

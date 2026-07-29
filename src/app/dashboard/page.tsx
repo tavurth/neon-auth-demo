@@ -15,7 +15,7 @@ export default async function DashboardPage() {
 			<div className="mb-8 flex items-center justify-between">
 				<div>
 					<h1 className="text-2xl font-bold">Notes</h1>
-					<p className="text-sm text-zinc-500">
+					<p className="text-sm text-muted-foreground">
 						Signed in as {session.user.email}
 					</p>
 				</div>

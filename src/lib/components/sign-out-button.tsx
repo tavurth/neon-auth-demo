@@ -13,7 +13,7 @@ export function SignOutButton() {
 				await authClient.signOut();
 				router.push("/auth/sign-in");
 			}}
-			className="rounded-md bg-zinc-200 px-3 py-1.5 text-sm font-medium text-zinc-700 hover:bg-zinc-300 dark:bg-zinc-700 dark:text-zinc-200 dark:hover:bg-zinc-600"
+			className="rounded-md bg-secondary px-3 py-1.5 text-sm font-medium text-secondary-foreground hover:bg-accent"
 		>
 			Sign out
 		</button>
