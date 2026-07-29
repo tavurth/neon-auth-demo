@@ -5,16 +5,21 @@
 ```
 src/
   lib/
-    backend/          # Server-only code — never import in client components directly
-      auth/           # Neon Auth setup (server, client, jwks)
+    backend/          # Server-only code — never import in client components
+      auth/           # Neon Auth (server, client, jwks, middleware)
       db/             # Kysely connection
       repositories/   # Raw DB queries (one file per table)
       services/       # Business logic, validation (one file per domain)
+      pipeline.ts     # withCommon HoF (auth + future middleware)
     frontend/         # Client-only code
+      api/client.ts   # API client for fetching from /api routes
+      auth-client.ts  # Neon Auth client-side SDK
       stores/         # Zustand stores
     components/       # Shared React components (use when reused 2+ times)
-    shared/           # Types used by both backend and frontend
-      types.ts        # DB types (Note, NoteRow, NoteInsert, etc.)
+      ui/             # Primitives: Button, Input, Card
+    shared/           # Used by both backend and frontend
+      types/          # DB types (NoteRow, NoteInsert, etc.)
+      constants/      # Shared constants
   app/                # Next.js routing — pages and API routes only
 ```
 
@@ -23,9 +28,25 @@ src/
 - `@/backend/*` → `src/lib/backend/*`
 - `@/frontend/*` → `src/lib/frontend/*`
 - `@/components/*` → `src/lib/components/*`
-- `@/types` → `src/lib/shared/types.ts`
+- `@/types` → `src/lib/shared/types/`
+- `@/constants` → `src/lib/shared/constants/`
 
 Never use relative imports across directories. Use aliases.
+
+## Data Flow
+
+```
+Component → API route → withCommon → Service → Repository → DB
+                         ├─ withAuth
+                         ├─ withRateLimit (later)
+                         └─ withLogging (later)
+```
+
+- Components **never** import from `@/backend`
+- Components call API routes via `@/frontend/api/client`
+- API routes use `withCommon(handler)` — auth is automatic
+- Services are async, call repositories
+- Repositories are raw Kysely queries
 
 ## Code Style
 
@@ -42,11 +63,10 @@ Never use relative imports across directories. Use aliases.
 
 ## Components
 
-- Extract to `src/lib/components/` when a component is used **more than once**
+- Extract to `src/lib/components/` when used **more than once**
 - One component per file, named export
-- `"use client"` at top of file for client components
 - Components should be **composable** — split into sub-components, compose upward
-- Use UI primitives from `@/components/ui` for raw elements (Button, Input, Card)
+- Use UI primitives from `@/components/ui` for raw elements
 - Never use raw HTML elements when a UI primitive exists
 
 ### UI Primitives (`@/components/ui`)
@@ -57,9 +77,16 @@ Never use relative imports across directories. Use aliases.
 
 Import from barrel: `import { Button, Input, Card } from "@/components/ui"`
 
+## Types
+
+- Data types (from DB/API) go in `src/lib/shared/types/`
+- Component-specific callbacks can stay inline: `onDelete: () => void`
+- Data props must use shared types: `note: NoteRow` not `note: { id: string; ... }`
+- Import with: `import type { NoteRow } from "@/types"`
+
 ## Tailwind
 
-Use only the tokens defined in the `@theme` block in `globals.css`. Do not use arbitrary values or inline styles when a theme token exists.
+Use only the tokens defined in the `@theme` block in `globals.css`.
 
 **Colors:** `background`, `foreground`, `primary`, `secondary`, `muted`, `accent`, `destructive`, `border`, `ring`
 **Spacing/Sizing:** Use Tailwind's default scale (1-96)
@@ -69,26 +96,56 @@ Use only the tokens defined in the `@theme` block in `globals.css`. Do not use a
 
 - Server Components: default, no directive needed
 - Client Components: `"use client"` at top
-- Server Actions: `"use server"` at top, async functions only
+- Server Actions: `"use server"` at top, in services only
 - Never pass non-serializable values (Date, Map, Set, class instances) from server to client
 
 ## Backend Layers
 
 1. **Repositories** — raw Kysely queries, no business logic
-2. **Services** — validation, authorization, orchestration. Call repositories.
-3. Frontend imports services directly (they are server actions)
+2. **Services** — validation, orchestration. Call repositories. Are server actions.
+3. **API Routes** — use `withCommon(handler)`, call services
 
-## Architecture Rules (enforced by pre-commit)
+## API Routes
 
-- `@backend` imports are **forbidden** in `components/` and `frontend/`
-- Direct DB imports (`@/backend/db`) are **forbidden** outside `repositories/` and `api/`
-- Pages (`app/`) can import from `@backend` (server components)
-- API routes (`app/api/`) can import from `@backend`
+All API routes must use the `withCommon` pipeline:
 
-Run `bun run check` to verify.
+```ts
+import { withCommon } from "@/backend/pipeline";
 
-## Testing
+export const GET = withCommon(async ({ userId }) => {
+  // userId is guaranteed by withAuth middleware
+  const notes = await listNotes(userId);
+  return NextResponse.json(notes);
+});
+```
 
-- `bun run check` — architecture boundary checks
-- `bun run test` — hurl e2e tests
-- `bun run build` — type safety
+Add new middleware in `pipeline.ts` — runs in order, short-circuits on error.
+
+## Architecture Checks
+
+Run `bun run check` — 15 boundary checks run automatically on commit:
+
+1. No backend imports in client code
+2. No raw fetch() in components
+3. No "use server" in client code
+4. API routes must use withCommon
+5. No direct DB imports outside repositories
+6. No relative imports
+7. No raw process.env
+8. Files under 300 lines
+9. No raw SQL (use Kysely)
+10. No hardcoded URLs/ports
+11. No default exports in components
+12. No barrel re-exports
+13. No magic numbers
+14. Magic numbers in constants
+15. Data props use shared types
+
+## Scripts
+
+- `bun run dev` — start dev server
+- `bun run build` — type check + build
+- `bun run lint` — biome check
+- `bun run check` — architecture checks
+- `bun run test` — e2e tests (hurl)
+- `bun run db:reset` — drop + re-migrate database
