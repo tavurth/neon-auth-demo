@@ -52,6 +52,17 @@ Never use relative imports across directories. Use aliases.
 - Extract to `src/lib/components/` when a component is used **more than once**
 - One component per file, named export
 - `"use client"` at top of file for client components
+- Components should be **composable** — split into sub-components, compose upward
+- Use UI primitives from `@/components/ui` for raw elements (Button, Input, Card)
+- Never use raw HTML elements when a UI primitive exists
+
+### UI Primitives (`@/components/ui`)
+
+- **Button** — `<Button variant="primary|secondary|destructive|ghost" size="sm|md|lg">`
+- **Input** — `<Input placeholder="..." />`
+- **Card** — `<Card><CardHeader><CardTitle>...</CardTitle></CardHeader><CardContent>...</CardContent></Card>`
+
+Import from barrel: `import { Button, Input, Card } from "@/components/ui"`
 
 ## Tailwind
 
