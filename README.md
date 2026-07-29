@@ -4,25 +4,35 @@ Notes app with [Neon Auth](https://neon.com/docs/auth), [Kysely](https://kysely-
 
 ## Setup
 
-1. Install dependencies:
+1. [Create a Neon account](https://neon.tech) and start a project.
+
+2. Enable Auth in your Neon dashboard under **Auth > Configuration**. Copy your Auth URL.
+
+3. Install dependencies:
 
 ```bash
 bun install
 ```
 
-2. Copy `.env.example` to `.env` and fill in your Neon credentials:
+4. Copy `.env.example` to `.env` and fill in your credentials:
 
 ```bash
 cp .env.example .env
 ```
 
-3. Run migrations:
+5. Generate a cookie secret:
+
+```bash
+openssl rand -base64 32
+```
+
+6. Run migrations:
 
 ```bash
 bunx dbmate up
 ```
 
-4. Start the dev server:
+7. Start the dev server:
 
 ```bash
 bun run dev
@@ -32,12 +42,13 @@ Open [http://localhost:3000](http://localhost:3000).
 
 ## Stack
 
-| Tool | Purpose |
-|------|---------|
-| Neon Auth | Email OTP + session management |
-| Kysely | Type-safe SQL query builder |
-| dbmate | SQL migration runner |
-| jose | JWT/JWKS verification |
+| Tool | Purpose | Docs |
+|------|---------|------|
+| [Neon](https://neon.tech) | Serverless Postgres | [Docs](https://neon.com/docs) |
+| [Neon Auth](https://neon.com/docs/auth) | Email OTP + sessions | [Quickstart](https://neon.com/docs/auth/quick-start/nextjs-api-only) |
+| [Kysely](https://kysely-org.github.io/kysely/) | Type-safe query builder | [Docs](https://kysely-org.github.io/kysely/) |
+| [dbmate](https://github.com/amacneil/dbmate) | SQL migrations | [README](https://github.com/amacneil/dbmate) |
+| [jose](https://github.com/panva/jose) | JWT/JWKS verification | [Docs](https://github.com/panva/jose#readme) |
 
 ## Project Structure
 
