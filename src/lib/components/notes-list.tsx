@@ -116,12 +116,7 @@ function NoteCard({
 						{new Date(note.created_at).toLocaleDateString()}
 					</p>
 				</div>
-				<Button
-					variant="ghost"
-					size="sm"
-					onClick={onDelete}
-					className="text-destructive hover:text-destructive/80"
-				>
+				<Button variant="destructive" size="sm" onClick={onDelete}>
 					Delete
 				</Button>
 			</CardContent>
