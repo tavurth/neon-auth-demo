@@ -1,7 +1,6 @@
 "use client";
 
 import { useState } from "react";
-import { authClient } from "@/backend/auth/client";
 import {
 	Button,
 	Card,
@@ -9,6 +8,7 @@ import {
 	CardHeader,
 	CardTitle,
 } from "@/components/ui";
+import { authClient } from "@/frontend/auth-client";
 
 export function JwtInfo() {
 	const [token, setToken] = useState<string | null>(null);

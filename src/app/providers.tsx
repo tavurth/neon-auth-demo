@@ -5,7 +5,7 @@ import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { type ReactNode, useState } from "react";
-import { authClient } from "@/backend/auth/client";
+import { authClient } from "@/frontend/auth-client";
 
 export function Providers({ children }: { children: ReactNode }) {
 	const router = useRouter();

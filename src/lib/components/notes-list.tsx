@@ -1,7 +1,6 @@
 "use client";
 
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
-import { createNote, deleteNote, listNotes } from "@/backend/services/notes";
 import {
 	Button,
 	Card,
@@ -10,25 +9,26 @@ import {
 	CardTitle,
 	Input,
 } from "@/components/ui";
+import { api } from "@/frontend/api/client";
 import { useNotesStore } from "@/frontend/stores/notes";
 
-export function NotesList({ userId }: { userId: string }) {
+export function NotesList() {
 	return (
 		<div className="space-y-4">
-			<NoteForm userId={userId} />
-			<NoteItems userId={userId} />
+			<NoteForm />
+			<NoteItems />
 		</div>
 	);
 }
 
-function NoteForm({ userId }: { userId: string }) {
+function NoteForm() {
 	const queryClient = useQueryClient();
 	const { draft, setDraftTitle, clearDraft } = useNotesStore();
 
 	const create = useMutation({
-		mutationFn: () => createNote(userId, draft.title),
+		mutationFn: () => api.notes.create(draft.title),
 		onSuccess: () => {
-			queryClient.invalidateQueries({ queryKey: ["notes", userId] });
+			queryClient.invalidateQueries({ queryKey: ["notes"] });
 			clearDraft();
 		},
 	});
@@ -63,18 +63,18 @@ function NoteForm({ userId }: { userId: string }) {
 	);
 }
 
-function NoteItems({ userId }: { userId: string }) {
+function NoteItems() {
 	const queryClient = useQueryClient();
 
 	const { data: notes = [], isLoading } = useQuery({
-		queryKey: ["notes", userId],
-		queryFn: () => listNotes(userId),
+		queryKey: ["notes"],
+		queryFn: () => api.notes.list(),
 	});
 
 	const remove = useMutation({
-		mutationFn: (id: string) => deleteNote(userId, id),
+		mutationFn: (id: string) => api.notes.delete(id),
 		onSuccess: () => {
-			queryClient.invalidateQueries({ queryKey: ["notes", userId] });
+			queryClient.invalidateQueries({ queryKey: ["notes"] });
 		},
 	});
 

@@ -20,6 +20,15 @@
       "preset": "recommended",
       "a11y": {
         "useAltText": "off"
+      },
+      "suspicious": {
+        "noExplicitAny": "error",
+        "noConsole": {
+          "level": "warn",
+          "options": {
+            "allow": ["error", "warn"]
+          }
+        }
       }
     }
   },

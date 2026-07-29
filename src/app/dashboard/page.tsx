@@ -22,7 +22,7 @@ export default async function DashboardPage() {
 				<SignOutButton />
 			</div>
 			<div className="space-y-6">
-				<NotesList userId={session.user.id} />
+				<NotesList />
 				<JwtInfo />
 			</div>
 		</div>
