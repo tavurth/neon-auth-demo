@@ -78,6 +78,17 @@ Use only the tokens defined in the `@theme` block in `globals.css`. Do not use a
 2. **Services** — validation, authorization, orchestration. Call repositories.
 3. Frontend imports services directly (they are server actions)
 
+## Architecture Rules (enforced by pre-commit)
+
+- `@backend` imports are **forbidden** in `components/` and `frontend/`
+- Direct DB imports (`@/backend/db`) are **forbidden** outside `repositories/` and `api/`
+- Pages (`app/`) can import from `@backend` (server components)
+- API routes (`app/api/`) can import from `@backend`
+
+Run `bun run check` to verify.
+
 ## Testing
 
-- Run `bun run build` to verify type safety
+- `bun run check` — architecture boundary checks
+- `bun run test` — hurl e2e tests
+- `bun run build` — type safety
