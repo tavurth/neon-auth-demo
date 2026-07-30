@@ -5,6 +5,11 @@ VIOLATIONS=$(git ls-files '*.ts' '*.tsx' | grep -E '^src/lib/(components|fronten
 if [ -n "$VIOLATIONS" ]; then
   echo "Backend imports found in client code:"
   echo "$VIOLATIONS"
-  echo "Components must call API routes via @/frontend/api/client."
+  echo ""
+  echo "Components must call API routes via the client:"
+  echo ""
+  echo "  import { api } from '@/frontend/api/client';"
+  echo ""
+  echo "  const notes = await api.notes.list();"
   exit 1
 fi

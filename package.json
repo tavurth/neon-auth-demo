@@ -12,7 +12,11 @@
     "prepare": "husky",
     "db:reset": "bunx dbmate drop && bunx dbmate up",
     "test": "./tests/test.sh",
-    "check": "./tests/architecture/test.sh"
+    "check": "./tests/architecture/test.sh",
+    "create:component": "./scripts/create-component.sh",
+    "create:service": "./scripts/create-service.sh",
+    "create:repository": "./scripts/create-repository.sh",
+    "create:migration": "./scripts/create-migration.sh"
   },
   "dependencies": {
     "@neondatabase/auth": "^0.4.2-beta",

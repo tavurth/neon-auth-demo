@@ -5,6 +5,11 @@ VIOLATIONS=$(git ls-files '*.tsx' | grep -E '^src/lib/(components|frontend)/' | 
 if [ -n "$VIOLATIONS" ]; then
   echo "Default export found in component/frontend code:"
   echo "$VIOLATIONS"
-  echo "Use named exports instead."
+  echo ""
+  echo "Use named exports instead:"
+  echo ""
+  echo "  export function NotesList() { ... }"
+  echo ""
+  echo "  import { NotesList } from '@/components/notes-list';"
   exit 1
 fi

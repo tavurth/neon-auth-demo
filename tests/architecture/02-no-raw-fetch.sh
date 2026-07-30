@@ -5,6 +5,11 @@ VIOLATIONS=$(git ls-files '*.tsx' | grep -E '^src/lib/components/' | xargs grep 
 if [ -n "$VIOLATIONS" ]; then
   echo "Raw fetch() found in components:"
   echo "$VIOLATIONS"
-  echo "Use api client from @/frontend/api/client instead."
+  echo ""
+  echo "Use the API client instead:"
+  echo ""
+  echo "  import { api } from '@/frontend/api/client';"
+  echo ""
+  echo "  const notes = await api.notes.list();"
   exit 1
 fi

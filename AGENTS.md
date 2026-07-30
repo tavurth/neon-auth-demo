@@ -20,6 +20,8 @@ src/
     shared/           # Used by both backend and frontend
       types/          # DB types (NoteRow, NoteInsert, etc.)
       constants/      # Shared constants
+      errors.ts       # Custom error classes
+      logger.ts       # Logging utility
   app/                # Next.js routing — pages and API routes only
 ```
 
@@ -68,6 +70,7 @@ Component → API route → withCommon → Service → Repository → DB
 - Components should be **composable** — split into sub-components, compose upward
 - Use UI primitives from `@/components/ui` for raw elements
 - Never use raw HTML elements when a UI primitive exists
+- Filenames must be kebab-case (e.g. `note-card.tsx`)
 
 ### UI Primitives (`@/components/ui`)
 
@@ -83,6 +86,32 @@ Import from barrel: `import { Button, Input, Card } from "@/components/ui"`
 - Component-specific callbacks can stay inline: `onDelete: () => void`
 - Data props must use shared types: `note: NoteRow` not `note: { id: string; ... }`
 - Import with: `import type { NoteRow } from "@/types"`
+- Filenames must be lowercase (e.g. `notes.ts`)
+
+## Errors
+
+Use custom error classes from `@/lib/shared/errors`:
+
+```ts
+import { NotFoundError, ValidationError } from "@/lib/shared/errors";
+
+throw new NotFoundError("Note", noteId);
+throw new ValidationError("Title cannot be empty");
+```
+
+The `withCommon` pipeline catches these and returns proper JSON responses:
+
+```json
+{ "error": "Note with id 123 not found", "code": "NOT_FOUND" }
+```
+
+Available errors:
+
+- `AppError` — base class (500)
+- `NotFoundError` — resource not found (404)
+- `UnauthorizedError` — auth required (401)
+- `ValidationError` — invalid input (400)
+- `ConflictError` — duplicate resource (409)
 
 ## Tailwind
 
@@ -111,9 +140,9 @@ All API routes must use the `withCommon` pipeline:
 
 ```ts
 import { withCommon } from "@/backend/pipeline";
+import { listNotes } from "@/backend/services/notes";
 
 export const GET = withCommon(async ({ userId }) => {
-  // userId is guaranteed by withAuth middleware
   const notes = await listNotes(userId);
   return NextResponse.json(notes);
 });
@@ -121,9 +150,24 @@ export const GET = withCommon(async ({ userId }) => {
 
 Add new middleware in `pipeline.ts` — runs in order, short-circuits on error.
 
+## Logging
+
+Use the logger from `@/lib/shared/logger`:
+
+```ts
+import { logger } from "@/lib/shared/logger";
+
+logger.info("User created", { userId: "123" });
+logger.error("Database error", error);
+```
+
+Set `LOG_LEVEL` in `.env` to control output: `debug`, `info`, `warn`, `error`.
+
+Set `DB_DEBUG=true` to log all database queries.
+
 ## Architecture Checks
 
-Run `bun run check` — 15 boundary checks run automatically on commit:
+Run `bun run check` — 18 boundary checks run automatically on commit:
 
 1. No backend imports in client code
 2. No raw fetch() in components
@@ -140,6 +184,9 @@ Run `bun run check` — 15 boundary checks run automatically on commit:
 13. No magic numbers
 14. Magic numbers in constants
 15. Data props use shared types
+16. Inline data types use shared types
+17. Migrations have up and down blocks
+18. Filename standards (kebab-case components, lowercase services/repos, snake_case migrations)
 
 ## Scripts
 
@@ -149,3 +196,7 @@ Run `bun run check` — 15 boundary checks run automatically on commit:
 - `bun run check` — architecture checks
 - `bun run test` — e2e tests (hurl)
 - `bun run db:reset` — drop + re-migrate database
+- `bun run create:component <Name>` — scaffold component (PascalCase)
+- `bun run create:service <name>` — scaffold service (lowercase)
+- `bun run create:repository <name>` — scaffold repository (lowercase)
+- `bun run create:migration <name>` — scaffold migration (snake_case)

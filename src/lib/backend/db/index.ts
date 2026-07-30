@@ -1,10 +1,14 @@
 import { Kysely, PostgresDialect } from "kysely";
 import { Pool } from "pg";
 import type { DB } from "@/types";
-import { getDatabaseUrl } from "../env";
+import { getDatabaseUrl, getDbDebug } from "../env";
+import { DebugPlugin } from "./debug-plugin";
 
-const dialect = new PostgresDialect({
-	pool: new Pool({ connectionString: getDatabaseUrl() }),
+const pool = new Pool({ connectionString: getDatabaseUrl() });
+
+const dialect = new PostgresDialect({ pool });
+
+export const db = new Kysely<DB>({
+	dialect,
+	plugins: getDbDebug() ? [new DebugPlugin()] : [],
 });
-
-export const db = new Kysely<DB>({ dialect });

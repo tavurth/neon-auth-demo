@@ -5,6 +5,11 @@ VIOLATIONS=$(git ls-files '*.ts' '*.tsx' -- src/ | grep -v 'src/lib/backend/env.
 if [ -n "$VIOLATIONS" ]; then
   echo "Raw process.env access found:"
   echo "$VIOLATIONS"
-  echo "Use getters from @/backend/env instead."
+  echo ""
+  echo "Use getters from env.ts instead:"
+  echo ""
+  echo "  import { getDatabaseUrl } from '@/backend/env';"
+  echo ""
+  echo "  const url = getDatabaseUrl();"
   exit 1
 fi

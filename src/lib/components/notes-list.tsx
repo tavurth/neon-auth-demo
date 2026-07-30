@@ -11,6 +11,7 @@ import {
 } from "@/components/ui";
 import { api } from "@/frontend/api/client";
 import { useNotesStore } from "@/frontend/stores/notes";
+import type { NoteRow } from "@/types";
 
 export function NotesList() {
 	return (
@@ -100,13 +101,7 @@ function NoteItems() {
 	);
 }
 
-function NoteCard({
-	note,
-	onDelete,
-}: {
-	note: { id: string; title: string; created_at: Date };
-	onDelete: () => void;
-}) {
+function NoteCard({ note, onDelete }: { note: NoteRow; onDelete: () => void }) {
 	return (
 		<Card>
 			<CardContent className="flex items-center justify-between">

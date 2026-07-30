@@ -14,11 +14,14 @@ export function createNote(data: NoteInsert): Promise<NoteRow | undefined> {
 	return db.insertInto("notes").values(data).returningAll().executeTakeFirst();
 }
 
-export function deleteNoteById(noteId: string, userId: string): Promise<void> {
-	return db
+export async function deleteNoteById(
+	noteId: string,
+	userId: string,
+): Promise<boolean> {
+	const result = await db
 		.deleteFrom("notes")
 		.where("id", "=", noteId)
 		.where("user_id", "=", userId)
-		.execute()
-		.then(() => undefined);
+		.executeTakeFirst();
+	return (result?.numDeletedRows ?? 0) > 0;
 }

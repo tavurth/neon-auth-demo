@@ -7,9 +7,11 @@ export const GET = withCommon(async ({ userId }) => {
 	return NextResponse.json(notes);
 });
 
-export const POST = withCommon(async ({ userId, params }) => {
-	if (!params?.title)
+export const POST = withCommon(async ({ userId, body }) => {
+	const { title } = body as { title?: string };
+	if (!title) {
 		return NextResponse.json({ error: "Missing title" }, { status: 400 });
-	const note = await createNote(userId, params.title);
+	}
+	const note = await createNote(userId, title);
 	return NextResponse.json(note);
 });

@@ -13,6 +13,10 @@ function requireEnv(name: string): string {
 	return value;
 }
 
+function optionalEnv(name: string, fallback: string): string {
+	return process.env[name] ?? fallback;
+}
+
 export function getAuthBaseUrl() {
 	return requireEnv("NEON_AUTH_BASE_URL");
 }
@@ -23,4 +27,22 @@ export function getAuthCookieSecret() {
 
 export function getDatabaseUrl() {
 	return requireEnv("DATABASE_URL");
+}
+
+export function getDbDebug() {
+	return optionalEnv("DB_DEBUG", "false") === "true";
+}
+
+export function getDbDebugFilter(): string[] {
+	const filter = optionalEnv("DB_DEBUG_FILTER", "");
+	if (!filter) return [];
+	return filter.split(",").map((s) => s.trim().toLowerCase());
+}
+
+export function getLogLevel() {
+	return optionalEnv("LOG_LEVEL", "info");
+}
+
+export function isDevelopment() {
+	return process.env.NODE_ENV === "development";
 }

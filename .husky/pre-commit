@@ -1,2 +1,2 @@
-bash tests/architecture/test.sh || exit 1
 bunx lint-staged
+bash tests/architecture/test.sh || exit 1

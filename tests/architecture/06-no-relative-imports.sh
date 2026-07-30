@@ -5,6 +5,11 @@ VIOLATIONS=$(git ls-files '*.ts' '*.tsx' | grep -E '^src/(lib/(components|fronte
 if [ -n "$VIOLATIONS" ]; then
   echo "Relative imports found across directories:"
   echo "$VIOLATIONS"
-  echo "Use path aliases (@/backend, @/frontend, @/components) instead."
+  echo ""
+  echo "Use path aliases instead:"
+  echo ""
+  echo "  import { db } from '@/backend/db';"
+  echo "  import { api } from '@/frontend/api/client';"
+  echo "  import { Button } from '@/components/ui';"
   exit 1
 fi
