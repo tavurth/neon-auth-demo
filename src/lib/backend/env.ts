@@ -43,6 +43,10 @@ export function getLogLevel() {
 	return optionalEnv("LOG_LEVEL", "info");
 }
 
+export function getJwtSecret() {
+	return optionalEnv("JWT_SECRET", "test-secret-for-e2e-only");
+}
+
 export function isDevelopment() {
 	return process.env.NODE_ENV === "development";
 }
