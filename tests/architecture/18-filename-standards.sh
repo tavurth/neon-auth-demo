@@ -3,7 +3,7 @@
 ERRORS=0
 
 # Components: must be PascalCase kebab (e.g. note-card.tsx)
-VIOLATIONS=$(git ls-files '*.tsx' | grep -E '^src/lib/components/' | grep -v 'ui/' | while read -r file; do
+VIOLATIONS=$(git ls-files '*.tsx' | grep -E '^src/lib/frontend/components/' | grep -v 'ui/' | while read -r file; do
   base=$(basename "$file" .tsx)
   if ! echo "$base" | grep -qE '^[a-z][a-z0-9-]+$'; then
     echo "$file (should be kebab-case like note-card.tsx)"

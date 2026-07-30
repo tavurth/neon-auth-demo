@@ -12,7 +12,7 @@ fi
 # Convert PascalCase to kebab-case
 KEBAB=$(echo "$NAME" | sed 's/\([A-Z]\)/ \1/g' | tr '[:upper:]' '[:lower:]' | tr ' ' '-' | sed 's/^-//')
 
-FILE="src/lib/components/${KEBAB}.tsx"
+FILE="src/lib/frontend/components/${KEBAB}.tsx"
 
 if [ -f "$FILE" ]; then
   echo "Error: $FILE already exists"

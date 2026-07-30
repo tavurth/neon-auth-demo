@@ -29,7 +29,7 @@ src/
 
 - `@/backend/*` → `src/lib/backend/*`
 - `@/frontend/*` → `src/lib/frontend/*`
-- `@/components/*` → `src/lib/components/*`
+- `@/components/*` → `src/lib/frontend/components/*`
 - `@/types` → `src/lib/shared/types/`
 - `@/constants` → `src/lib/shared/constants/`
 
@@ -65,7 +65,7 @@ Component → API route → withCommon(pipeline) → Service → Repository → 
 
 ## Components
 
-- Extract to `src/lib/components/` when used **more than once**
+- Extract to `src/lib/frontend/components/` when used **more than once**
 - One component per file, named export
 - Components should be **composable** — split into sub-components, compose upward
 - Use UI primitives from `@/components/ui` for raw elements
