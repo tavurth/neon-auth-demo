@@ -10,7 +10,7 @@ src/
       db/             # Kysely connection
       repositories/   # Raw DB queries (one file per table)
       services/       # Business logic, validation (one file per domain)
-      pipeline.ts     # withCommon HoF (auth + future middleware)
+      pipeline/       # withCommon HoF, middleware, error handling, debug injection
     frontend/         # Client-only code
       api/client.ts   # API client for fetching from /api routes
       auth-client.ts  # Neon Auth client-side SDK
@@ -38,7 +38,7 @@ Never use relative imports across directories. Use aliases.
 ## Data Flow
 
 ```
-Component → API route → withCommon → Service → Repository → DB
+Component → API route → withCommon(pipeline) → Service → Repository → DB
                          ├─ withAuth
                          ├─ withRateLimit (later)
                          └─ withLogging (later)
@@ -148,7 +148,37 @@ export const GET = withCommon(async ({ userId }) => {
 });
 ```
 
-Add new middleware in `pipeline.ts` — runs in order, short-circuits on error.
+Add new middleware in `pipeline/middleware.ts` — runs in order, short-circuits on error.
+
+## Auth
+
+The `withAuth` middleware supports two auth methods:
+
+1. **Neon Auth sessions** — cookies, used by web UI
+2. **JWT tokens** — `Authorization: Bearer <token>`, used by API clients/mobile apps
+
+JWT verification uses `JWT_SECRET` from `.env`. Generate with:
+
+```bash
+openssl rand -base64 32
+```
+
+## Debug Mode
+
+In development, add `?debug=1` to any API route to get debug info:
+
+```json
+[
+  { "data": "..." },
+  {
+    "__debug": {
+      "logs": [...],
+      "queries": [{ "sql": "...", "params": [...], "duration": 12 }]
+    },
+    "__hint": "Without ?debug=1, only array[0] is returned."
+  }
+]
+```
 
 ## Logging
 
@@ -167,7 +197,7 @@ Set `DB_DEBUG=true` to log all database queries.
 
 ## Architecture Checks
 
-Run `bun run check` — 18 boundary checks run automatically on commit:
+Run `bun run check` — 19 boundary checks run automatically on commit:
 
 1. No backend imports in client code
 2. No raw fetch() in components
@@ -187,6 +217,7 @@ Run `bun run check` — 18 boundary checks run automatically on commit:
 16. Inline data types use shared types
 17. Migrations have up and down blocks
 18. Filename standards (kebab-case components, lowercase services/repos, snake_case migrations)
+19. No inline error status codes (use custom error classes)
 
 ## Scripts
 

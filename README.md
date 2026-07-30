@@ -20,7 +20,7 @@ bun install
 cp .env.example .env
 ```
 
-5. Generate a cookie secret:
+5. Generate a cookie secret and JWT secret:
 
 ```bash
 openssl rand -base64 32
@@ -77,7 +77,7 @@ src/
       db/             # Kysely connection
       repositories/   # Raw DB queries
       services/       # Business logic + server actions
-      pipeline.ts     # withCommon HoF (auth + middleware)
+      pipeline/       # withCommon HoF, error handling, debug injection
     frontend/         # Client-only code
       api/client.ts   # API client for /api routes
       auth-client.ts  # Neon Auth client SDK
@@ -89,24 +89,58 @@ src/
       constants/      # Shared constants
       errors.ts       # Custom error classes
       logger.ts       # Logging utility
+      request-context.ts # AsyncLocalStorage for request-scoped data
   app/                # Next.js routing
     api/              # API routes
     auth/             # Auth pages
     dashboard/        # Protected dashboard
 db/migrations/        # SQL migrations (dbmate)
 tests/
-  architecture/       # 18 boundary checks
+  architecture/       # 19 boundary checks
   e2e/                # Hurl e2e tests
 ```
 
 ## Architecture
 
 ```
-Component → API route → withCommon → Service → Repository → DB
+Component → API route → withCommon(pipeline) → Service → Repository → DB
                          ├─ withAuth
                          ├─ withRateLimit (later)
                          └─ withLogging (later)
 ```
+
+## Auth
+
+Two auth methods supported:
+
+1. **Neon Auth sessions** — cookies, used by web UI
+2. **JWT tokens** — `Authorization: Bearer <token>`, for API clients/mobile apps
+
+E2E tests generate JWT tokens using `jose`:
+
+```bash
+TOKEN=$(JWT_SECRET="..." node -e "
+const { SignJWT } = require('jose')
+const secret = new TextEncoder().encode(process.env.JWT_SECRET)
+new SignJWT({ sub: 'test-user', scopes: ['read', 'write'] })
+  .setProtectedHeader({ alg: 'HS256' })
+  .setIssuedAt()
+  .setExpirationTime('1h')
+  .sign(secret)
+  .then(t => console.log(t))
+")
+curl -H "Authorization: Bearer $TOKEN" http://localhost:3000/api/notes
+```
+
+## Debug Mode
+
+In development, add `?debug=1` to any API route:
+
+```bash
+curl http://localhost:3000/api/notes?debug=1
+```
+
+Returns `[data, { __debug, __hint }]` with logs and SQL queries.
 
 See [AGENTS.md](./AGENTS.md) for full conventions.
 
