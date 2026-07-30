@@ -88,8 +88,7 @@ src/
       types/          # DB types (NoteRow, NoteInsert, etc.)
       constants/      # Shared constants
       errors.ts       # Custom error classes
-      logger.ts       # Logging utility
-      request-context.ts # AsyncLocalStorage for request-scoped data
+      logger.ts       # Logging utility (inject sink from backend)
   app/                # Next.js routing
     api/              # API routes
     auth/             # Auth pages

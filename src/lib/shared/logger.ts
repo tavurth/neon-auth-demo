@@ -1,5 +1,3 @@
-import { addLog } from "./request-context";
-
 type LogLevel = "debug" | "info" | "warn" | "error";
 
 const LEVELS: Record<LogLevel, number> = {
@@ -9,22 +7,38 @@ const LEVELS: Record<LogLevel, number> = {
 	error: 3,
 };
 
-const currentLevel = LEVELS[process.env.LOG_LEVEL as LogLevel] ?? LEVELS.info;
+let currentLevel: LogLevel = "info";
+
+export function setLogLevel(level: LogLevel) {
+	currentLevel = level;
+}
 
 function shouldLog(level: LogLevel): boolean {
-	return LEVELS[level] >= currentLevel;
+	return LEVELS[level] >= LEVELS[currentLevel];
 }
 
 function format(level: LogLevel, message: string, data?: unknown): string {
-	const timestamp = new Date().toISOString();
-	const prefix = `[${timestamp}] ${level.toUpperCase()}`;
-	if (data === undefined) return `${prefix} ${message}`;
-	return `${prefix} ${message} ${JSON.stringify(data, null, 2)}`;
+	const prefix = `[${level.toUpperCase()}] ${message}`;
+	if (data !== undefined) return `${prefix} ${JSON.stringify(data, null, 2)}`;
+	return prefix;
+}
+
+type LogSink = (entry: {
+	level: string;
+	message: string;
+	data?: unknown;
+	timestamp: string;
+}) => void;
+
+let sink: LogSink | null = null;
+
+export function setLogSink(fn: LogSink) {
+	sink = fn;
 }
 
 export const logger = {
 	debug(message: string, data?: unknown) {
-		addLog({
+		sink?.({
 			level: "debug",
 			message,
 			data,
@@ -35,7 +49,7 @@ export const logger = {
 	},
 
 	info(message: string, data?: unknown) {
-		addLog({
+		sink?.({
 			level: "info",
 			message,
 			data,
@@ -46,7 +60,7 @@ export const logger = {
 	},
 
 	warn(message: string, data?: unknown) {
-		addLog({
+		sink?.({
 			level: "warn",
 			message,
 			data,
@@ -57,7 +71,7 @@ export const logger = {
 	},
 
 	error(message: string, error?: unknown) {
-		addLog({
+		sink?.({
 			level: "error",
 			message,
 			data: error,

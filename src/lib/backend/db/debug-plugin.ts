@@ -6,7 +6,7 @@ import type {
 	RootOperationNode,
 	UnknownRow,
 } from "kysely";
-import { addQuery } from "@/lib/shared/request-context";
+import { addQuery } from "@/backend/request-context";
 import { getDbDebugFilter } from "../env";
 
 // PostgresQueryCompiler is exported at runtime but not in types

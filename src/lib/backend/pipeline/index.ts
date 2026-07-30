@@ -1,12 +1,20 @@
 import { withAuth } from "@/backend/auth/middleware";
-import { logger } from "@/lib/shared/logger";
-import { getDebugInfo, runWithContext } from "@/lib/shared/request-context";
+import { getLogLevel } from "@/backend/env";
+import {
+	addLog,
+	getDebugInfo,
+	runWithContext,
+} from "@/backend/request-context";
+import { logger, setLogLevel, setLogSink } from "@/lib/shared/logger";
 import { handleError } from "./errors";
 import { runMiddleware } from "./middleware";
 import { parseBody, withDebug } from "./parse";
 import type { Handler, HandlerCtx, MiddlewareFn } from "./types";
 
 const defaultMiddleware: MiddlewareFn[] = [withAuth];
+
+setLogSink(addLog);
+setLogLevel(getLogLevel() as "debug" | "info" | "warn" | "error");
 
 export function withCommon(handler: Handler, middleware = defaultMiddleware) {
 	const wrapped = async (

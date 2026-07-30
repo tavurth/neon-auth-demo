@@ -21,7 +21,7 @@ src/
       types/          # DB types (NoteRow, NoteInsert, etc.)
       constants/      # Shared constants
       errors.ts       # Custom error classes
-      logger.ts       # Logging utility
+      logger.ts       # Logging utility (inject sink from backend)
   app/                # Next.js routing — pages and API routes only
 ```
 
