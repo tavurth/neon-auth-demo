@@ -1,6 +1,7 @@
 import { NextResponse } from "next/server";
 import { withCommon } from "@/backend/pipeline";
 import { createNote, listNotes } from "@/backend/services/notes";
+import { ValidationError } from "@/lib/shared/errors";
 
 export const GET = withCommon(async ({ userId }) => {
 	const notes = await listNotes(userId);
@@ -9,9 +10,7 @@ export const GET = withCommon(async ({ userId }) => {
 
 export const POST = withCommon(async ({ userId, body }) => {
 	const { title } = body as { title?: string };
-	if (!title) {
-		return NextResponse.json({ error: "Missing title" }, { status: 400 });
-	}
+	if (!title) throw new ValidationError("Missing title");
 	const note = await createNote(userId, title);
 	return NextResponse.json(note);
 });

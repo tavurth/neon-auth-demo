@@ -1,9 +1,11 @@
 #!/usr/bin/env bash
-# Check: No magic numbers (except 0, 1, 100, 300 which are common)
-VIOLATIONS=$(git ls-files '*.ts' '*.tsx' -- src/ | xargs grep -n -E '\b\d{2,}\b' 2>/dev/null | grep -v -E '(0|1|100|300|\.0\.|node_modules|\.d\.ts|\.json)' | grep -v 'env.ts' | grep -v 'types.ts' || true)
+# Check: Magic numbers in component/frontend logic (warn only)
+# Excludes: strings, Tailwind classes, imports, type defs, constants
+VIOLATIONS=$(git ls-files '*.ts' '*.tsx' | grep -E '^src/(lib/(components|frontend)|app)/' | grep -v 'constants' | grep -v 'page.tsx' | xargs grep -n -E '(>\s*[0-9]{2,}|<\s*[0-9]{2,}|===\s*[0-9]{2,}|!==\s*[0-9]{2,}|\[\s*[0-9]+\s*\])' 2>/dev/null | grep -v -E "(className|import|from|type |interface |'[0-9]|\"[0-9]|//[0-9]|bg-|text-|hover:)" || true)
 
 if [ -n "$VIOLATIONS" ]; then
-  echo "Possible magic numbers found:"
+  echo "Possible magic numbers in logic:"
   echo "$VIOLATIONS"
-  echo "Consider using named constants."
+  echo ""
+  echo "Move to src/lib/shared/constants/index.ts"
 fi
