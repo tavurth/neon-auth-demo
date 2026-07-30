@@ -82,7 +82,9 @@ Import from barrel: `import { Button, Input, Card } from "@/components/ui"`
 
 ## Types
 
-- Data types (from DB/API) go in `src/lib/shared/types/`
+- DB types are auto-generated in `src/lib/shared/types/db.ts` via `kysely-codegen`
+- Re-exported from `src/lib/shared/types/index.ts` with convenience aliases (`NoteRow`, `NoteInsert`)
+- After migrations, run `bun run types:generate` to update types
 - Component-specific callbacks can stay inline: `onDelete: () => void`
 - Data props must use shared types: `note: NoteRow` not `note: { id: string; ... }`
 - Import with: `import type { NoteRow } from "@/types"`

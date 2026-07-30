@@ -16,7 +16,8 @@
     "create:component": "./scripts/create-component.sh",
     "create:service": "./scripts/create-service.sh",
     "create:repository": "./scripts/create-repository.sh",
-    "create:migration": "./scripts/create-migration.sh"
+    "create:migration": "./scripts/create-migration.sh",
+    "types:generate": "kysely-codegen --out-file src/lib/shared/types/db.ts"
   },
   "dependencies": {
     "@neondatabase/auth": "^0.4.2-beta",
@@ -40,6 +41,7 @@
     "@types/react-dom": "^19",
     "dbmate": "^2.34.1",
     "husky": "^9.1.7",
+    "kysely-codegen": "^0.20.0",
     "lint-staged": "^17.2.0",
     "prettier": "^3.9.6",
     "tailwindcss": "^4",
