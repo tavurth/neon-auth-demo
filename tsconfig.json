@@ -24,7 +24,7 @@
       "@/constants": ["./src/lib/shared/constants/"],
       "@/backend/*": ["./src/lib/backend/*"],
       "@/frontend/*": ["./src/lib/frontend/*"],
-      "@/components/*": ["./src/lib/components/*"],
+      "@/components/*": ["./src/lib/frontend/components/*"],
       "@/shared/*": ["./src/lib/shared/*"]
     }
   },

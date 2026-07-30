@@ -14,9 +14,9 @@ src/
     frontend/         # Client-only code
       api/client.ts   # API client for fetching from /api routes
       auth-client.ts  # Neon Auth client-side SDK
+      components/     # React components (use when reused 2+ times)
+        ui/           # Primitives: Button, Input, Card
       stores/         # Zustand stores
-    components/       # Shared React components (use when reused 2+ times)
-      ui/             # Primitives: Button, Input, Card
     shared/           # Used by both backend and frontend
       types/          # DB types (NoteRow, NoteInsert, etc.)
       constants/      # Shared constants
