@@ -4,7 +4,12 @@ import type { DB } from "@/types";
 import { getDatabaseUrl, getDbDebug } from "../env";
 import { DebugPlugin } from "./debug-plugin";
 
-const pool = new Pool({ connectionString: getDatabaseUrl() });
+const pool = new Pool({
+	max: 10,
+	idleTimeoutMillis: 30_000,
+	connectionTimeoutMillis: 5_000,
+	connectionString: getDatabaseUrl(),
+});
 
 const dialect = new PostgresDialect({ pool });
 
