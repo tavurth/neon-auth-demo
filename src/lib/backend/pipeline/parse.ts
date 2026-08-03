@@ -14,7 +14,6 @@ export async function withDebug(
 	ctx: DebugContext,
 ): Promise<Response> {
 	if (!isDevelopment()) return res;
-	if (ctx.logs.length === 0 && ctx.queries.length === 0) return res;
 
 	const url = new URL(req.url);
 	if (!url.searchParams.has("debug")) return res;
