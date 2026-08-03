@@ -2,13 +2,10 @@ import { checkRateLimit } from "./rate-limit";
 import type { MiddlewareFn } from "./types";
 
 export type RateLimitConfig = {
-	max?: number;
-	windowMs?: number;
+	max: number;
+	windowMs: number;
 	keyFn?: (req: Request) => string;
 };
-
-const DEFAULT_MAX = 100;
-const DEFAULT_WINDOW_MS = 60_000;
 
 function getClientIp(req: Request): string {
 	return (
@@ -26,9 +23,8 @@ function rateLimitHeaders(max: number, remaining: number, resetAt: number) {
 	};
 }
 
-export function withRateLimit(config: RateLimitConfig = {}): MiddlewareFn {
-	const max = config.max ?? DEFAULT_MAX;
-	const windowMs = config.windowMs ?? DEFAULT_WINDOW_MS;
+export function withRateLimit(config: RateLimitConfig): MiddlewareFn {
+	const { max, windowMs } = config;
 	const keyFn = config.keyFn ?? ((req) => getClientIp(req));
 
 	return async (req) => {
