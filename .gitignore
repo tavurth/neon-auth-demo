@@ -18,3 +18,4 @@ db/schema.sql
 # misc
 *.tsbuildinfo
 next-env.d.ts
+opencode.json
