@@ -1,6 +1,8 @@
 #!/usr/bin/env bash
 # Check: No raw SQL (use Kysely query builder)
-VIOLATIONS=$(git ls-files '*.ts' '*.tsx' -- src/lib/backend/ | xargs grep -n 'sql`' 2>/dev/null || true)
+DIR="$(dirname "$0")"
+. "$DIR/utils.sh"
+VIOLATIONS=$(git_files '*.ts' '*.tsx' | xargs grep -n 'sql`' 2>/dev/null || true)
 
 if [ -n "$VIOLATIONS" ]; then
   echo "Raw SQL found (use Kysely query builder instead):"

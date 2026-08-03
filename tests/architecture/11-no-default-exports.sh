@@ -1,6 +1,8 @@
 #!/usr/bin/env bash
 # Check: No default exports in components/frontend (pages use them)
-VIOLATIONS=$(git ls-files '*.tsx' | grep -E '^src/lib/(components|frontend)/' | xargs grep -n 'export default' 2>/dev/null || true)
+DIR="$(dirname "$0")"
+. "$DIR/utils.sh"
+VIOLATIONS=$(git_files '*.tsx' | grep -E '^src/lib/(components|frontend)/' | xargs grep -n 'export default' 2>/dev/null || true)
 
 if [ -n "$VIOLATIONS" ]; then
   echo "Default export found in component/frontend code:"

@@ -49,7 +49,7 @@ Open [http://localhost:3000](http://localhost:3000).
 | `bun run lint`                     | Biome lint + format               |
 | `bun run check`                    | Architecture boundary checks      |
 | `bun run test`                     | Hurl e2e tests                    |
-| `bun run db:reset`                 | Drop + re-migrate database        |
+| `bun run db:migrate`               | Run pending migrations            |
 | `bun run create:component <Name>`  | Scaffold a component (PascalCase) |
 | `bun run create:service <name>`    | Scaffold a service (lowercase)    |
 | `bun run create:repository <name>` | Scaffold a repository (lowercase) |

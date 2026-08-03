@@ -1,4 +1,5 @@
 import { isDevelopment } from "@/backend/env";
+import type { DebugContext } from "@/types";
 
 export function parseBody(req: Request): Promise<unknown> {
 	const contentType = req.headers.get("content-type");
@@ -10,7 +11,7 @@ export function parseBody(req: Request): Promise<unknown> {
 export async function withDebug(
 	req: Request,
 	res: Response,
-	ctx: { logs: unknown[]; queries: unknown[] },
+	ctx: DebugContext,
 ): Promise<Response> {
 	if (!isDevelopment()) return res;
 	if (ctx.logs.length === 0 && ctx.queries.length === 0) return res;

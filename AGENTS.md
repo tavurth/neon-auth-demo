@@ -46,7 +46,7 @@ Component → API route → withCommon(pipeline) → Service → Repository → 
 
 - Components **never** import from `@/backend`
 - Components call API routes via `@/frontend/api/client`
-- API routes use `withCommon(handler)` — auth is automatic
+- API routes use `withCommon(handler)` — auth is automatic. Use `withCommon({ auth: false })(handler)` for public routes.
 - Services are async, call repositories
 - Repositories are raw Kysely queries
 
@@ -144,13 +144,25 @@ All API routes must use the `withCommon` pipeline:
 import { withCommon } from "@/backend/pipeline";
 import { listNotes } from "@/backend/services/notes";
 
+// With auth (default)
 export const GET = withCommon(async ({ userId }) => {
   const notes = await listNotes(userId);
   return NextResponse.json(notes);
 });
+
+// Without auth
+export const GET = withCommon({ auth: false })(async () => {
+  return NextResponse.json({ status: "ok" });
+});
 ```
 
+`withCommon` is curried: `withCommon(handler)` or `withCommon(config)(handler)`.
+
 Add new middleware in `pipeline/middleware.ts` — runs in order, short-circuits on error.
+
+## Health Endpoint
+
+`GET /api/health` — public, no auth. Checks DB connectivity with in-memory caching (successes cached 10s, failures always re-checked). Used by test pre-flight to detect missing migrations.
 
 ## Auth
 
@@ -199,7 +211,7 @@ Set `DB_DEBUG=true` to log all database queries.
 
 ## Architecture Checks
 
-Run `bun run check` — 19 boundary checks run automatically on commit:
+Run `bun run check` — 18 boundary checks run automatically on commit:
 
 1. No backend imports in client code
 2. No raw fetch() in components
@@ -214,12 +226,11 @@ Run `bun run check` — 19 boundary checks run automatically on commit:
 11. No default exports in components
 12. No barrel re-exports
 13. No magic numbers
-14. Magic numbers in constants
-15. Data props use shared types
-16. Inline data types use shared types
-17. Migrations have up and down blocks
-18. Filename standards (kebab-case components, lowercase services/repos, snake_case migrations)
-19. No inline error status codes (use custom error classes)
+14. Data props use shared types
+15. Inline types use shared types
+16. Migrations have up and down blocks
+17. Filename standards (kebab-case components, lowercase services/repos, snake_case migrations)
+18. No inline error status codes (use custom error classes)
 
 ## Scripts
 
@@ -227,8 +238,8 @@ Run `bun run check` — 19 boundary checks run automatically on commit:
 - `bun run build` — type check + build
 - `bun run lint` — biome check
 - `bun run check` — architecture checks
-- `bun run test` — e2e tests (hurl)
-- `bun run db:reset` — drop + re-migrate database
+- `bun run test` — e2e tests (hurl), with pre-flight checks for server/DB health
+- `bun run db:migrate` — run pending migrations
 - `bun run create:component <Name>` — scaffold component (PascalCase)
 - `bun run create:service <name>` — scaffold service (lowercase)
 - `bun run create:repository <name>` — scaffold repository (lowercase)

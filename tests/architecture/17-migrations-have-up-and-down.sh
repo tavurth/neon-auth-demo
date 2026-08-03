@@ -1,8 +1,10 @@
 #!/usr/bin/env bash
 # Check: All migrations must have up and down blocks
+DIR="$(dirname "$0")"
+. "$DIR/utils.sh"
 VIOLATIONS=0
 
-for f in $(git ls-files -- 'db/migrations/*.sql'); do
+for f in $(git_files -- 'db/migrations/*.sql'); do
   if ! grep -q 'migrate:up' "$f" 2>/dev/null; then
     echo "Missing 'migrate:up' in $f"
     VIOLATIONS=1

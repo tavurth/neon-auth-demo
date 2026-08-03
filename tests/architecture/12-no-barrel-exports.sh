@@ -1,6 +1,8 @@
 #!/usr/bin/env bash
 # Check: No barrel re-exports from backend index files
-VIOLATIONS=$(git ls-files 'index.ts' -- src/lib/backend/ | xargs grep -n 'export.*from' 2>/dev/null || true)
+DIR="$(dirname "$0")"
+. "$DIR/utils.sh"
+VIOLATIONS=$(git_files 'src/lib/backend/**/index.ts' | xargs grep -n 'export.*from' 2>/dev/null || true)
 
 if [ -n "$VIOLATIONS" ]; then
   echo "Barrel re-export found in backend:"

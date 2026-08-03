@@ -1,7 +1,7 @@
 import { jwtVerify } from "jose";
 import { auth } from "@/backend/auth/server";
 import { getJwtSecret } from "@/backend/env";
-import { UnauthorizedError } from "@/lib/shared/errors";
+import { AppError, UnauthorizedError } from "@/lib/shared/errors";
 
 const JWT_SECRET = new TextEncoder().encode(getJwtSecret());
 
@@ -17,7 +17,16 @@ export async function withAuth(req: Request, _ctx: Record<string, unknown>) {
 		}
 	}
 
-	const { data: session } = await auth.getSession();
-	if (!session?.user) throw new UnauthorizedError();
-	return { userId: session.user.id };
+	try {
+		const { data: session } = await auth.getSession();
+		if (!session?.user) throw new UnauthorizedError();
+		return { userId: session.user.id };
+	} catch (error) {
+		if (error instanceof UnauthorizedError) throw error;
+		throw new AppError(
+			"Neon Auth backend is unreachable. Check NEON_AUTH_BASE_URL in .env.",
+			500,
+			"AUTH_BACKEND_UNREACHABLE",
+		);
+	}
 }

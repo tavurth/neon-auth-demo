@@ -1,23 +1,9 @@
 import { AsyncLocalStorage } from "node:async_hooks";
+import type { DebugContext, LogEntry, QueryEntry } from "@/types";
 
-interface RequestContext {
-	logs: LogEntry[];
-	queries: QueryEntry[];
-}
+export type { DebugContext, LogEntry, QueryEntry } from "@/types";
 
-interface LogEntry {
-	level: string;
-	message: string;
-	data?: unknown;
-	timestamp: string;
-}
-
-interface QueryEntry {
-	sql: string;
-	params: unknown[];
-	rows?: unknown[];
-	duration?: number;
-}
+interface RequestContext extends DebugContext {}
 
 const storage = new AsyncLocalStorage<RequestContext>();
 

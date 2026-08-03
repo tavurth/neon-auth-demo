@@ -27,6 +27,17 @@ fi
 # Run e2e tests
 echo ""
 echo "=== E2E tests ==="
+
+# Pre-flight: check dev server and database health
+HEALTH=$(curl -s "http://localhost:3000/api/health" 2>/dev/null || echo '{"status":"unreachable"}')
+if echo "$HEALTH" | grep -q '"status":"unreachable"'; then
+    echo "ERROR: Dev server not running on port 3000. Start with: bun run dev"
+    exit 1
+fi
+if echo "$HEALTH" | grep -q '"status":"degraded"'; then
+    echo "ERROR: Database tables not found. Run: bun run db:migrate"
+    exit 1
+fi
 FILTER="${1:-}"
 for f in "$DIR"/e2e/*"${FILTER}"*.hurl; do
     [ -f "$f" ] || continue

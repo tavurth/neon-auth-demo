@@ -10,3 +10,7 @@ export type MiddlewareFn = (
 	req: Request,
 	ctx: Record<string, unknown>,
 ) => Promise<Record<string, unknown> | Response>;
+
+export type WithCommonConfig = {
+	auth?: boolean;
+};

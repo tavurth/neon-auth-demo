@@ -26,10 +26,7 @@ export function JwtInfo() {
 					</pre>
 				)}
 				<p className="mt-3 text-xs text-muted-foreground">
-					<code>
-						curl -H "Authorization: Bearer &lt;token&gt;"
-						http://localhost:3000/api/notes
-					</code>
+					<code>curl -H "Authorization: Bearer &lt;token&gt;" /api/notes</code>
 				</p>
 			</CardContent>
 		</Card>

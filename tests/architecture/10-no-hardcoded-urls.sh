@@ -1,6 +1,8 @@
 #!/usr/bin/env bash
 # Check: No hardcoded URLs/ports
-VIOLATIONS=$(git ls-files '*.ts' '*.tsx' -- src/ | xargs grep -n -E 'localhost:\d+|127\.0\.0\.1' 2>/dev/null | grep -v 'env.ts' | grep -v -E '(//|/\*|\*|<code|<pre)' || true)
+DIR="$(dirname "$0")"
+. "$DIR/utils.sh"
+VIOLATIONS=$(git_files 'src/*.ts' 'src/*.tsx' 'src/**/*.ts' 'src/**/*.tsx' | xargs grep -n -E 'localhost:\d+|127\.0\.0\.1' 2>/dev/null | grep -v 'env.ts' | grep -v -E '[^:]+:[0-9]+:\s*(//|/\*|\*)' || true)
 
 if [ -n "$VIOLATIONS" ]; then
   echo "Hardcoded URL/port found:"

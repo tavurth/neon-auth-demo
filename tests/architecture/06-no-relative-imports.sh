@@ -1,6 +1,8 @@
 #!/usr/bin/env bash
 # Check: No relative imports across directories
-VIOLATIONS=$(git ls-files '*.ts' '*.tsx' | grep -E '^src/(lib/(components|frontend|backend)|app)/' | xargs grep -n "from '\.\." 2>/dev/null || true)
+DIR="$(dirname "$0")"
+. "$DIR/utils.sh"
+VIOLATIONS=$(git_files '*.ts' '*.tsx' | xargs grep -n "from '\.\." 2>/dev/null || true)
 
 if [ -n "$VIOLATIONS" ]; then
   echo "Relative imports found across directories:"

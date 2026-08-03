@@ -1,6 +1,8 @@
 #!/usr/bin/env bash
 # Check: No "use server" in client code
-VIOLATIONS=$(git ls-files '*.ts' '*.tsx' | grep -E '^src/lib/(components|frontend)/' | xargs grep -n '"use server"' 2>/dev/null || true)
+DIR="$(dirname "$0")"
+. "$DIR/utils.sh"
+VIOLATIONS=$(git_files '*.ts' '*.tsx' | grep -E '^src/lib/(components|frontend)/' | xargs grep -n '"use server"' 2>/dev/null || true)
 
 if [ -n "$VIOLATIONS" ]; then
   echo "'use server' found in client code:"
