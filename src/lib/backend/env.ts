@@ -17,6 +17,13 @@ function optionalEnv(name: string, fallback: string): string {
 	return process.env[name] ?? fallback;
 }
 
+function optionalInt(name: string, fallback: number): number {
+	const value = process.env[name];
+	if (!value) return fallback;
+	const parsed = Number.parseInt(value, 10);
+	return Number.isNaN(parsed) ? fallback : parsed;
+}
+
 export function getAuthBaseUrl() {
 	return requireEnv("NEON_AUTH_BASE_URL");
 }
@@ -45,6 +52,14 @@ export function getLogLevel() {
 
 export function getJwtSecret() {
 	return optionalEnv("JWT_SECRET", "test-secret-for-e2e-only");
+}
+
+export function getRateLimitMax() {
+	return optionalInt("RATE_LIMIT_MAX", 100);
+}
+
+export function getRateLimitWindowMs() {
+	return optionalInt("RATE_LIMIT_WINDOW_MS", 60_000);
 }
 
 export function isDevelopment() {

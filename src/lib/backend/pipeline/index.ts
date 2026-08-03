@@ -1,5 +1,9 @@
 import { withAuth } from "@/backend/auth/middleware";
-import { getLogLevel } from "@/backend/env";
+import {
+	getLogLevel,
+	getRateLimitMax,
+	getRateLimitWindowMs,
+} from "@/backend/env";
 import {
 	addLog,
 	getDebugInfo,
@@ -13,8 +17,6 @@ import { parseBody, withDebug } from "./parse";
 import type { Handler, HandlerCtx, MiddlewareFn } from "./types";
 import { withRateLimit } from "./with-rate-limit";
 
-const DEFAULT_RATE_LIMIT = { max: 100, windowMs: 60_000 };
-
 setLogSink(addLog);
 setLogLevel(getLogLevel() as "debug" | "info" | "warn" | "error");
 
@@ -26,7 +28,14 @@ function buildMiddleware({ auth, rateLimit }: WithCommonConfig) {
 	const middleware: MiddlewareFn[] = [];
 
 	if (rateLimit !== false) {
-		middleware.push(withRateLimit(rateLimit ?? DEFAULT_RATE_LIMIT));
+		middleware.push(
+			withRateLimit(
+				rateLimit ?? {
+					max: getRateLimitMax(),
+					windowMs: getRateLimitWindowMs(),
+				},
+			),
+		);
 	}
 	if (auth !== false) {
 		middleware.push(withAuth);
