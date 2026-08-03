@@ -20,28 +20,35 @@ setLogLevel(getLogLevel() as "debug" | "info" | "warn" | "error");
 
 type WrappedHandler = (req: Request, ctx: RouteCtx) => Promise<Response>;
 
-function buildMiddleware(config: WithCommonConfig): MiddlewareFn[] {
+const debugCtx = () => getDebugInfo() ?? { logs: [], queries: [] };
+
+function buildMiddleware({ auth, rateLimit }: WithCommonConfig) {
 	const middleware: MiddlewareFn[] = [];
 
-	if (config.rateLimit !== false) {
-		middleware.push(
-			withRateLimit(
-				config.rateLimit === undefined ? DEFAULT_RATE_LIMIT : config.rateLimit,
-			),
-		);
+	if (rateLimit !== false) {
+		middleware.push(withRateLimit(rateLimit ?? DEFAULT_RATE_LIMIT));
 	}
-
-	if (config.auth !== false) {
+	if (auth !== false) {
 		middleware.push(withAuth);
 	}
 
 	return middleware;
 }
 
+function setHeaders(
+	res: Response,
+	headers: Record<string, string> | undefined,
+) {
+	if (!headers) return;
+	for (const [k, v] of Object.entries(headers)) {
+		res.headers.set(k, v);
+	}
+}
+
 function wrap(handler: Handler, config: WithCommonConfig): WrappedHandler {
 	const middleware = buildMiddleware(config);
 
-	const wrapped: WrappedHandler = async (req, routeCtx) => {
+	return async (req, routeCtx) => {
 		return runWithContext(async () => {
 			try {
 				const params = routeCtx?.params ? await routeCtx.params : undefined;
@@ -50,40 +57,17 @@ function wrap(handler: Handler, config: WithCommonConfig): WrappedHandler {
 
 				const result = await runMiddleware(req, ctx, middleware);
 				if (result instanceof Response)
-					return withDebug(
-						req,
-						result,
-						getDebugInfo() ?? { logs: [], queries: [] },
-					);
+					return withDebug(req, result, debugCtx());
 
 				const response = await handler(result as HandlerCtx);
-
-				const headers = result.rateLimitHeaders as
-					| Record<string, string>
-					| undefined;
-				if (headers) {
-					for (const [k, v] of Object.entries(headers)) {
-						response.headers.set(k, v);
-					}
-				}
-
-				return withDebug(
-					req,
-					response,
-					getDebugInfo() ?? { logs: [], queries: [] },
-				);
+				setHeaders(response, result.rateLimitHeaders as Record<string, string>);
+				return withDebug(req, response, debugCtx());
 			} catch (error) {
 				logger.error("API error", error);
-				return withDebug(
-					req,
-					handleError(error),
-					getDebugInfo() ?? { logs: [], queries: [] },
-				);
+				return withDebug(req, handleError(error), debugCtx());
 			}
 		});
 	};
-
-	return wrapped;
 }
 
 export function withCommon(handler: Handler): WrappedHandler;
