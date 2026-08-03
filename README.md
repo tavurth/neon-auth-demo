@@ -103,9 +103,9 @@ tests/
 
 ```
 Component → API route → withCommon(pipeline) → Service → Repository → DB
-                         ├─ withAuth
-                         ├─ withRateLimit (later)
-                         └─ withLogging (later)
+                         ├─ withRateLimit (100/min default, per-endpoint config)
+                         ├─ withAuth (JWT or Neon Auth session)
+                         └─ withDebug (?debug=1 in dev)
 ```
 
 ## Auth

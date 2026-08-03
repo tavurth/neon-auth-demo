@@ -154,9 +154,25 @@ export const GET = withCommon(async ({ userId }) => {
 export const GET = withCommon({ auth: false })(async () => {
   return NextResponse.json({ status: "ok" });
 });
+
+// Custom rate limit
+export const POST = withCommon({ rateLimit: { max: 10, windowMs: 60_000 } })(async ({
+  userId,
+  body,
+}) => {
+  // ...
+});
 ```
 
 `withCommon` is curried: `withCommon(handler)` or `withCommon(config)(handler)`.
+
+Config options:
+
+- `auth: false` — skip auth middleware (default: `true`)
+- `rateLimit: false` — disable rate limiting (default: `{ max: 100, windowMs: 60_000 }`)
+- `rateLimit: { max, windowMs }` — custom rate limit per endpoint
+
+Rate limit headers (`X-RateLimit-Limit`, `X-RateLimit-Remaining`, `X-RateLimit-Reset`) are added to every response.
 
 Add new middleware in `pipeline/middleware.ts` — runs in order, short-circuits on error.
 

@@ -5,14 +5,13 @@ import { withCommon } from "@/backend/pipeline";
 import { getAppliedMigrations } from "@/backend/repositories/health";
 
 const CACHE_TTL_MS = 10_000;
-const FIRST_SEGMENT = 0;
 let lastResult: { status: string; db: string } | null = null;
 let lastCheck = 0;
 
 function migrationVersions(): string[] {
 	return readdirSync(join(process.cwd(), "db/migrations"))
 		.filter((f) => f.endsWith(".sql"))
-		.map((f) => f.split("_")[FIRST_SEGMENT]);
+		.map((f) => f.split("_")[0]);
 }
 
 function allApplied(applied: string[], versions: string[]): boolean {

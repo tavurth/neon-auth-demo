@@ -11,6 +11,12 @@ export type MiddlewareFn = (
 	ctx: Record<string, unknown>,
 ) => Promise<Record<string, unknown> | Response>;
 
+export type RateLimitOptions = {
+	max?: number;
+	windowMs?: number;
+};
+
 export type WithCommonConfig = {
 	auth?: boolean;
+	rateLimit?: RateLimitOptions | false;
 };
