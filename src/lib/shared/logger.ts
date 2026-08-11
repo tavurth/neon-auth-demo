@@ -45,6 +45,7 @@ export const logger = {
 			timestamp: new Date().toISOString(),
 		});
 		if (!shouldLog("debug")) return;
+		// biome-ignore lint/suspicious/noConsole: logger abstraction
 		console.debug(format("debug", message, data));
 	},
 
@@ -56,6 +57,7 @@ export const logger = {
 			timestamp: new Date().toISOString(),
 		});
 		if (!shouldLog("info")) return;
+		// biome-ignore lint/suspicious/noConsole: logger abstraction
 		console.info(format("info", message, data));
 	},
 
@@ -67,6 +69,7 @@ export const logger = {
 			timestamp: new Date().toISOString(),
 		});
 		if (!shouldLog("warn")) return;
+		// biome-ignore lint/suspicious/noConsole: logger abstraction
 		console.warn(format("warn", message, data));
 	},
 
@@ -78,6 +81,7 @@ export const logger = {
 			timestamp: new Date().toISOString(),
 		});
 		if (!shouldLog("error")) return;
+		// biome-ignore lint/suspicious/noConsole: logger abstraction
 		console.error(format("error", message, error));
 	},
 };

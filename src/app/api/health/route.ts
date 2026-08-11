@@ -1,6 +1,6 @@
-import { readdirSync } from "fs";
+import { readdirSync } from "node:fs";
+import { join } from "node:path";
 import { NextResponse } from "next/server";
-import { join } from "path";
 import { withCommon } from "@/backend/pipeline";
 import { getAppliedMigrations } from "@/backend/repositories/health";
 

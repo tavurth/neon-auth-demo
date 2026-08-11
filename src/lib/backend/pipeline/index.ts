@@ -29,12 +29,11 @@ function buildMiddleware({ auth, rateLimit }: WithCommonConfig) {
 
 	if (rateLimit !== false) {
 		middleware.push(
-			withRateLimit(
-				rateLimit ?? {
-					max: getRateLimitMax(),
-					windowMs: getRateLimitWindowMs(),
-				},
-			),
+			withRateLimit({
+				max: getRateLimitMax(),
+				windowMs: getRateLimitWindowMs(),
+				...rateLimit,
+			}),
 		);
 	}
 	if (auth !== false) {

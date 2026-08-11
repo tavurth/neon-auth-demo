@@ -1,4 +1,5 @@
 import { createRemoteJWKSet, type JWTPayload, jwtVerify } from "jose";
+import { logger } from "@/lib/shared/logger";
 import { getAuthBaseUrl } from "../env";
 
 let jwks: ReturnType<typeof createRemoteJWKSet> | null = null;
@@ -24,7 +25,7 @@ export async function verifyJwt(
 		});
 		return { payload };
 	} catch (error) {
-		console.error("JWT verification failed:", error);
+		logger.error("JWT verification failed:", error);
 		return null;
 	}
 }

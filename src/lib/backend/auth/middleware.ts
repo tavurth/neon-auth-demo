@@ -1,6 +1,7 @@
 import { jwtVerify } from "jose";
 import { auth } from "@/backend/auth/server";
 import { getJwtSecret } from "@/backend/env";
+import { HTTP_INTERNAL_SERVER_ERROR } from "@/constants";
 import { AppError, UnauthorizedError } from "@/lib/shared/errors";
 
 const JWT_SECRET = new TextEncoder().encode(getJwtSecret());
@@ -25,7 +26,7 @@ export async function withAuth(req: Request, _ctx: Record<string, unknown>) {
 		if (error instanceof UnauthorizedError) throw error;
 		throw new AppError(
 			"Neon Auth backend is unreachable. Check NEON_AUTH_BASE_URL in .env.",
-			500,
+			HTTP_INTERNAL_SERVER_ERROR,
 			"AUTH_BACKEND_UNREACHABLE",
 		);
 	}

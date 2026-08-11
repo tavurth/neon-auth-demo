@@ -7,6 +7,7 @@ import type {
 	UnknownRow,
 } from "kysely";
 import { addQuery } from "@/backend/request-context";
+import { logger } from "@/lib/shared/logger";
 import { getDbDebugFilter } from "../env";
 
 // PostgresQueryCompiler is exported at runtime but not in types
@@ -25,7 +26,7 @@ const queryData = new WeakMap<
 const compiler = new PostgresQueryCompiler();
 
 function prettyPrint(label: string, data: unknown) {
-	console.debug(`[${label}]`, JSON.stringify(data, null, 2));
+	logger.debug(`[${label}]`, data);
 }
 
 function matchesFilter(sql: string, filter: string[]): boolean {

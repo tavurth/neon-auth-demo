@@ -1,3 +1,4 @@
+import { HTTP_TOO_MANY_REQUESTS } from "@/constants";
 import { checkRateLimit } from "./rate-limit";
 import type { MiddlewareFn } from "./types";
 
@@ -40,7 +41,7 @@ export function withRateLimit(config: RateLimitConfig): MiddlewareFn {
 					retryAfter,
 				}),
 				{
-					status: 429,
+					status: HTTP_TOO_MANY_REQUESTS,
 					headers: {
 						"Content-Type": "application/json",
 						"Retry-After": String(retryAfter),

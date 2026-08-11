@@ -1,4 +1,5 @@
 import { NextResponse } from "next/server";
+import { HTTP_INTERNAL_SERVER_ERROR } from "@/constants";
 import { AppError } from "@/lib/shared/errors";
 
 export function handleError(error: unknown): NextResponse {
@@ -11,6 +12,6 @@ export function handleError(error: unknown): NextResponse {
 
 	return NextResponse.json(
 		{ error: "Internal server error", code: "INTERNAL_ERROR" },
-		{ status: 500 },
+		{ status: HTTP_INTERNAL_SERVER_ERROR },
 	);
 }
