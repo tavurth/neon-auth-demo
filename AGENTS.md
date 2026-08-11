@@ -253,6 +253,7 @@ Run `bun run check` — 18 boundary checks run automatically on commit:
 - `bun run dev` — start dev server
 - `bun run build` — type check + build
 - `bun run lint` — biome check
+- `bun run lint:fix` — biome check with auto-fix (use this to fix formatting)
 - `bun run check` — architecture checks
 - `bun run test` — e2e tests (hurl), with pre-flight checks for server/DB health
 - `bun run db:migrate` — run pending migrations
