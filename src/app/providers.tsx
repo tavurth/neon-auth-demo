@@ -23,6 +23,7 @@ export function Providers({ children }: { children: ReactNode }) {
 				emailOTP
 				redirectTo="/dashboard"
 				Link={Link}
+				className="h-full"
 			>
 				{children}
 			</NeonAuthUIProvider>
