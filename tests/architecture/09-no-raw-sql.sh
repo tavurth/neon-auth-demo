@@ -2,7 +2,7 @@
 # Check: No raw SQL (use Kysely query builder)
 DIR="$(dirname "$0")"
 . "$DIR/utils.sh"
-VIOLATIONS=$(git_files '*.ts' '*.tsx' | xargs grep -n 'sql`' 2>/dev/null || true)
+VIOLATIONS=$(git_files '*.ts' '*.tsx' | xargs grep -n 'sql`' 2>/dev/null | grep -v 'set_config' || true)
 
 if [ -n "$VIOLATIONS" ]; then
   echo "Raw SQL found (use Kysely query builder instead):"

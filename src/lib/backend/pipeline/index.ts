@@ -1,5 +1,6 @@
 import { withAuth } from "@/backend/auth/middleware";
 import { getLogLevel, getRateLimitMax, getRateLimitWindowMs } from "@/backend/env";
+import { setCurrentUser } from "@/backend/repositories/auth";
 import { addLog, getDebugInfo, runWithContext } from "@/backend/request-context";
 import { logger, setLogLevel, setLogSink } from "@/lib/shared/logger";
 import type { RouteCtx, WithCommonConfig } from "@/types";
@@ -54,6 +55,10 @@ function wrap(handler: Handler, config: WithCommonConfig): WrappedHandler {
 
 				const result = await runMiddleware(req, ctx, middleware);
 				if (result instanceof Response) return withDebug(req, result, debugCtx());
+
+				if (result.userId && typeof result.userId === "string") {
+					await setCurrentUser(result.userId);
+				}
 
 				const response = await handler(result as HandlerCtx);
 				setHeaders(response, result.rateLimitHeaders as Record<string, string>);
