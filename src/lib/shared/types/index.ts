@@ -1,12 +1,18 @@
-export type {
-	DB,
-	Generated,
-	Insertable,
-	Selectable,
-} from "./db";
+import type { Generated, Insertable, Selectable } from "kysely";
 
-export type NoteRow = Selectable<"notes">;
-export type NoteInsert = Insertable<"notes">;
+export type { DB } from "./db";
+
+export interface Note {
+	id: Generated<string>;
+	user_id: string;
+	title: string;
+	body: Generated<string>;
+	created_at: Generated<Date>;
+	updated_at: Generated<Date>;
+}
+
+export type NoteRow = Selectable<Note>;
+export type NoteInsert = Insertable<Note>;
 
 export type RouteCtx = { params: Promise<Record<string, string>> };
 
