@@ -19,9 +19,7 @@ export class AppError extends Error {
 
 export class NotFoundError extends AppError {
 	constructor(resource: string, id?: string) {
-		const msg = id
-			? `${resource} with id ${id} not found`
-			: `${resource} not found`;
+		const msg = id ? `${resource} with id ${id} not found` : `${resource} not found`;
 		super(msg, HTTP_NOT_FOUND, "NOT_FOUND");
 		this.name = "NotFoundError";
 	}

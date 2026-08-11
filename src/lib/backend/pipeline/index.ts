@@ -1,14 +1,6 @@
 import { withAuth } from "@/backend/auth/middleware";
-import {
-	getLogLevel,
-	getRateLimitMax,
-	getRateLimitWindowMs,
-} from "@/backend/env";
-import {
-	addLog,
-	getDebugInfo,
-	runWithContext,
-} from "@/backend/request-context";
+import { getLogLevel, getRateLimitMax, getRateLimitWindowMs } from "@/backend/env";
+import { addLog, getDebugInfo, runWithContext } from "@/backend/request-context";
 import { logger, setLogLevel, setLogSink } from "@/lib/shared/logger";
 import type { RouteCtx, WithCommonConfig } from "@/types";
 import { handleError } from "./errors";
@@ -43,10 +35,7 @@ function buildMiddleware({ auth, rateLimit }: WithCommonConfig) {
 	return middleware;
 }
 
-function setHeaders(
-	res: Response,
-	headers: Record<string, string> | undefined,
-) {
+function setHeaders(res: Response, headers: Record<string, string> | undefined) {
 	if (!headers) return;
 	for (const [k, v] of Object.entries(headers)) {
 		res.headers.set(k, v);
@@ -64,8 +53,7 @@ function wrap(handler: Handler, config: WithCommonConfig): WrappedHandler {
 				const ctx: Record<string, unknown> = { params, body };
 
 				const result = await runMiddleware(req, ctx, middleware);
-				if (result instanceof Response)
-					return withDebug(req, result, debugCtx());
+				if (result instanceof Response) return withDebug(req, result, debugCtx());
 
 				const response = await handler(result as HandlerCtx);
 				setHeaders(response, result.rateLimitHeaders as Record<string, string>);
@@ -79,9 +67,7 @@ function wrap(handler: Handler, config: WithCommonConfig): WrappedHandler {
 }
 
 export function withCommon(handler: Handler): WrappedHandler;
-export function withCommon(
-	config: WithCommonConfig,
-): (handler: Handler) => WrappedHandler;
+export function withCommon(config: WithCommonConfig): (handler: Handler) => WrappedHandler;
 export function withCommon(
 	configOrHandler: Handler | WithCommonConfig,
 ): WrappedHandler | ((handler: Handler) => WrappedHandler) {

@@ -1,61 +1,62 @@
 {
-  "$schema": "https://biomejs.dev/schemas/2.5.6/schema.json",
-  "vcs": {
-    "enabled": true,
-    "clientKind": "git",
-    "useIgnoreFile": true
-  },
-  "files": {
-    "ignoreUnknown": true,
-    "includes": ["**", "!public"]
-  },
-  "formatter": {
-    "enabled": true,
-    "indentStyle": "tab",
-    "formatWithErrors": true
-  },
-  "linter": {
-    "enabled": true,
-    "rules": {
-      "preset": "recommended",
-      "a11y": {
-        "useAltText": "off"
-      },
-      "suspicious": {
-        "noExplicitAny": "error",
-        "noConsole": "error",
-        "noDebugger": "error",
-        "noAssignInExpressions": "error"
-      },
-      "security": {
-        "noDangerouslySetInnerHtml": "error"
-      },
-      "complexity": {
-        "noBannedTypes": "error"
-      },
-      "correctness": {
-        "noUnusedImports": "error",
-        "noUnusedVariables": "error",
-        "useExhaustiveDependencies": "warn"
-      }
-    }
-  },
-  "javascript": {
+    "$schema": "https://biomejs.dev/schemas/2.5.6/schema.json",
+    "vcs": {
+        "enabled": true,
+        "clientKind": "git",
+        "useIgnoreFile": true
+    },
+    "files": {
+        "ignoreUnknown": true,
+        "includes": ["**", "!public"]
+    },
     "formatter": {
-      "quoteStyle": "double"
+        "enabled": true,
+        "indentStyle": "tab",
+        "formatWithErrors": true,
+        "lineWidth": 100
+    },
+    "linter": {
+        "enabled": true,
+        "rules": {
+            "preset": "recommended",
+            "a11y": {
+                "useAltText": "off"
+            },
+            "suspicious": {
+                "noExplicitAny": "error",
+                "noConsole": "error",
+                "noDebugger": "error",
+                "noAssignInExpressions": "error"
+            },
+            "security": {
+                "noDangerouslySetInnerHtml": "error"
+            },
+            "complexity": {
+                "noBannedTypes": "error"
+            },
+            "correctness": {
+                "noUnusedImports": "error",
+                "noUnusedVariables": "error",
+                "useExhaustiveDependencies": "warn"
+            }
+        }
+    },
+    "javascript": {
+        "formatter": {
+            "quoteStyle": "double"
+        }
+    },
+    "css": {
+        "parser": {
+            "tailwindDirectives": true
+        }
+    },
+    "assist": {
+        "enabled": true,
+        "actions": {
+            "source": {
+                "organizeImports": "on"
+            }
+        }
     }
-  },
-  "css": {
-    "parser": {
-      "tailwindDirectives": true
-    }
-  },
-  "assist": {
-    "enabled": true,
-    "actions": {
-      "source": {
-        "organizeImports": "on"
-      }
-    }
-  }
 }

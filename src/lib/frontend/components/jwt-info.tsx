@@ -1,13 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import {
-	Button,
-	Card,
-	CardContent,
-	CardHeader,
-	CardTitle,
-} from "@/components/ui";
+import { Button, Card, CardContent, CardHeader, CardTitle } from "@/components/ui";
 import { authClient } from "@/frontend/auth-client";
 
 export function JwtInfo() {
@@ -20,11 +14,7 @@ export function JwtInfo() {
 			</CardHeader>
 			<CardContent>
 				<JwtButton onToken={setToken} />
-				{token && (
-					<pre className="mt-3 overflow-x-auto rounded bg-muted p-3 text-xs">
-						{token}
-					</pre>
-				)}
+				{token && <pre className="mt-3 overflow-x-auto rounded bg-muted p-3 text-xs">{token}</pre>}
 				<p className="mt-3 text-xs text-muted-foreground">
 					<code>curl -H "Authorization: Bearer &lt;token&gt;" /api/notes</code>
 				</p>

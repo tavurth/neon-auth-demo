@@ -3,16 +3,11 @@ import type { DebugContext } from "@/types";
 
 export function parseBody(req: Request): Promise<unknown> {
 	const contentType = req.headers.get("content-type");
-	if (!contentType?.includes("application/json"))
-		return Promise.resolve(undefined);
+	if (!contentType?.includes("application/json")) return Promise.resolve(undefined);
 	return req.json().catch(() => undefined);
 }
 
-export async function withDebug(
-	req: Request,
-	res: Response,
-	ctx: DebugContext,
-): Promise<Response> {
+export async function withDebug(req: Request, res: Response, ctx: DebugContext): Promise<Response> {
 	if (!isDevelopment()) return res;
 
 	const url = new URL(req.url);

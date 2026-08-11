@@ -16,9 +16,7 @@ export interface VerifiedSession {
 	payload: JWTPayload;
 }
 
-export async function verifyJwt(
-	token: string,
-): Promise<VerifiedSession | null> {
+export async function verifyJwt(token: string): Promise<VerifiedSession | null> {
 	try {
 		const { payload } = await jwtVerify(token, getJwks(), {
 			issuer: new URL(getAuthBaseUrl()).origin,

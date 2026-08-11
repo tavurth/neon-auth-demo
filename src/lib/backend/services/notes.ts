@@ -16,9 +16,7 @@ export async function createNote(userId: string, title: string) {
 	const trimmed = title.trim();
 	if (!trimmed) throw new ValidationError("Title cannot be empty");
 	if (trimmed.length > NOTE_LENGTH_LIMIT) {
-		throw new ValidationError(
-			`Title must be ${NOTE_LENGTH_LIMIT} characters or less`,
-		);
+		throw new ValidationError(`Title must be ${NOTE_LENGTH_LIMIT} characters or less`);
 	}
 	return repoCreateNote({ user_id: userId, title: trimmed });
 }

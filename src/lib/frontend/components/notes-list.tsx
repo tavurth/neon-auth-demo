@@ -1,14 +1,7 @@
 "use client";
 
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
-import {
-	Button,
-	Card,
-	CardContent,
-	CardHeader,
-	CardTitle,
-	Input,
-} from "@/components/ui";
+import { Button, Card, CardContent, CardHeader, CardTitle, Input } from "@/components/ui";
 import { api } from "@/frontend/api/client";
 import { useNotesStore } from "@/frontend/stores/notes";
 import type { NoteRow } from "@/types";
@@ -52,10 +45,7 @@ function NoteForm() {
 						onChange={(e) => setDraftTitle(e.target.value)}
 						placeholder="What's on your mind?"
 					/>
-					<Button
-						type="submit"
-						disabled={!draft.title.trim() || create.isPending}
-					>
+					<Button type="submit" disabled={!draft.title.trim() || create.isPending}>
 						Add
 					</Button>
 				</form>
@@ -79,23 +69,14 @@ function NoteItems() {
 		},
 	});
 
-	if (isLoading)
-		return <p className="text-sm text-muted-foreground">Loading...</p>;
+	if (isLoading) return <p className="text-sm text-muted-foreground">Loading...</p>;
 	if (notes.length === 0)
-		return (
-			<p className="text-sm text-muted-foreground">
-				No notes yet. Create one above.
-			</p>
-		);
+		return <p className="text-sm text-muted-foreground">No notes yet. Create one above.</p>;
 
 	return (
 		<div className="space-y-2">
 			{notes.map((note) => (
-				<NoteCard
-					key={note.id}
-					note={note}
-					onDelete={() => remove.mutate(note.id)}
-				/>
+				<NoteCard key={note.id} note={note} onDelete={() => remove.mutate(note.id)} />
 			))}
 		</div>
 	);

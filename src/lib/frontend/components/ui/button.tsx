@@ -13,8 +13,7 @@ const variantStyles: Record<ButtonVariant, string> = {
 		"bg-primary text-primary-foreground hover:bg-primary/90 disabled:bg-accent disabled:text-accent-foreground",
 	secondary:
 		"bg-secondary text-secondary-foreground hover:bg-accent disabled:bg-accent disabled:text-accent-foreground",
-	destructive:
-		"bg-destructive text-white hover:bg-red-700 disabled:bg-red-400 disabled:text-white",
+	destructive: "bg-destructive text-white hover:bg-red-700 disabled:bg-red-400 disabled:text-white",
 	ghost:
 		"hover:bg-accent hover:text-accent-foreground disabled:bg-transparent disabled:text-muted-foreground",
 };

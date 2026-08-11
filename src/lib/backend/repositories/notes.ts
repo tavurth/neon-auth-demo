@@ -14,10 +14,7 @@ export function createNote(data: NoteInsert): Promise<NoteRow | undefined> {
 	return db.insertInto("notes").values(data).returningAll().executeTakeFirst();
 }
 
-export async function deleteNoteById(
-	noteId: string,
-	userId: string,
-): Promise<boolean> {
+export async function deleteNoteById(noteId: string, userId: string): Promise<boolean> {
 	const result = await db
 		.deleteFrom("notes")
 		.where("id", "=", noteId)

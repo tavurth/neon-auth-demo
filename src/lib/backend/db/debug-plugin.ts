@@ -19,10 +19,7 @@ const PostgresQueryCompiler =
 		return kysely.PostgresQueryCompiler;
 	})();
 
-const queryData = new WeakMap<
-	object,
-	{ node: RootOperationNode; start: number }
->();
+const queryData = new WeakMap<object, { node: RootOperationNode; start: number }>();
 const compiler = new PostgresQueryCompiler();
 
 function prettyPrint(label: string, data: unknown) {
@@ -41,9 +38,7 @@ export class DebugPlugin implements KyselyPlugin {
 		return args.node;
 	}
 
-	async transformResult(
-		args: PluginTransformResultArgs,
-	): Promise<QueryResult<UnknownRow>> {
+	async transformResult(args: PluginTransformResultArgs): Promise<QueryResult<UnknownRow>> {
 		const data = queryData.get(args.queryId);
 		if (!data) return args.result;
 

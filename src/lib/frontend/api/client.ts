@@ -22,7 +22,6 @@ export const api = {
 				method: "POST",
 				body: JSON.stringify({ title }),
 			}),
-		delete: (id: string) =>
-			request<{ success: boolean }>(`/notes/${id}`, { method: "DELETE" }),
+		delete: (id: string) => request<{ success: boolean }>(`/notes/${id}`, { method: "DELETE" }),
 	},
 };

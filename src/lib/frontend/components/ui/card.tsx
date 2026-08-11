@@ -2,17 +2,15 @@ import { forwardRef, type HTMLAttributes } from "react";
 
 interface CardProps extends HTMLAttributes<HTMLDivElement> {}
 
-export const Card = forwardRef<HTMLDivElement, CardProps>(
-	({ className = "", ...props }, ref) => {
-		return (
-			<div
-				ref={ref}
-				className={`rounded-md border border-border bg-background p-4 ${className}`}
-				{...props}
-			/>
-		);
-	},
-);
+export const Card = forwardRef<HTMLDivElement, CardProps>(({ className = "", ...props }, ref) => {
+	return (
+		<div
+			ref={ref}
+			className={`rounded-md border border-border bg-background p-4 ${className}`}
+			{...props}
+		/>
+	);
+});
 Card.displayName = "Card";
 
 export const CardHeader = forwardRef<HTMLDivElement, CardProps>(
@@ -22,12 +20,11 @@ export const CardHeader = forwardRef<HTMLDivElement, CardProps>(
 );
 CardHeader.displayName = "CardHeader";
 
-export const CardTitle = forwardRef<
-	HTMLHeadingElement,
-	HTMLAttributes<HTMLHeadingElement>
->(({ className = "", ...props }, ref) => {
-	return <h3 ref={ref} className={`font-medium ${className}`} {...props} />;
-});
+export const CardTitle = forwardRef<HTMLHeadingElement, HTMLAttributes<HTMLHeadingElement>>(
+	({ className = "", ...props }, ref) => {
+		return <h3 ref={ref} className={`font-medium ${className}`} {...props} />;
+	},
+);
 CardTitle.displayName = "CardTitle";
 
 export const CardContent = forwardRef<HTMLDivElement, CardProps>(
